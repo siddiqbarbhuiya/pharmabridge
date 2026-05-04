@@ -18,9 +18,12 @@ import doctorRoutes from './routes/doctors'
 import appointmentRoutes from './routes/appointments'
 import pharmacyDoctorRoutes from './routes/pharmacy/doctors.route'
 import pharmacyAppointmentRoutes from './routes/pharmacy/appointments.route'
+import pharmacyProfileRoutes from './routes/pharmacy/profile.route'
 import orderRoutes from './routes/orders'
 import paymentRoutes from './routes/payments'
 import promoCardRoutes from './routes/promo-cards.route'
+import addressRoutes from './routes/addresses'
+import userRoutes from './routes/users.route'
 import notificationServicePlugin from './services/notification.service'
 import notificationRoutes from './routes/notifications.route'
 import { AppError } from './utils/errors'
@@ -89,9 +92,12 @@ export async function buildServer(): Promise<FastifyInstance> {
   await fastify.register(appointmentRoutes,       { prefix: '/api/v1' })
   await fastify.register(pharmacyDoctorRoutes,    { prefix: '/api/v1/pharmacy' })
   await fastify.register(pharmacyAppointmentRoutes, { prefix: '/api/v1/pharmacy' })
+  await fastify.register(pharmacyProfileRoutes,    { prefix: '/api/v1/pharmacy' })
   await fastify.register(orderRoutes,             { prefix: '/api/v1' })
   await fastify.register(paymentRoutes,           { prefix: '/api/v1' })
   await fastify.register(promoCardRoutes,         { prefix: '/api/v1' })
+  await fastify.register(addressRoutes,           { prefix: '/api/v1' })
+  await fastify.register(userRoutes,              { prefix: '/api/v1' })
   await fastify.register(notificationRoutes,      { prefix: '/api/v1' })
 
   // ── Global error handler ─────────────────────────────────────────────

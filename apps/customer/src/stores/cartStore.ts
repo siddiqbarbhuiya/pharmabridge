@@ -3,13 +3,14 @@ import { persist } from 'zustand/middleware'
 import type { Medicine } from '@pharmabridge/types'
 
 export interface CartItem {
-  medicine: Pick<Medicine, 'id' | 'name' | 'price' | 'mrp' | 'unit' | 'imageUrl' | 'isPrescriptionRequired' | 'pharmacyId'>
+  medicine: Pick<Medicine, 'id' | 'name' | 'price' | 'mrp' | 'unit' | 'imageUrl' | 'isPrescriptionRequired' | 'pharmacyId'> & { stock?: number }
   quantity: number
 }
 
 interface CartState {
   items: CartItem[]
   pharmacyId: string | null
+  isDrawerOpen: boolean
   addItem: (medicine: CartItem['medicine'], qty?: number) => void
   removeItem: (medicineId: string) => void
   updateQty: (medicineId: string, qty: number) => void
@@ -17,6 +18,7 @@ interface CartState {
   total: () => number
   itemCount: () => number
   requiresPrescription: () => boolean
+  setDrawerOpen: (v: boolean) => void
 }
 
 export const useCartStore = create<CartState>()(
@@ -24,6 +26,7 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       pharmacyId: null,
+      isDrawerOpen: false,
 
       addItem: (medicine, qty = 1) => {
         const { items } = get()
@@ -62,7 +65,12 @@ export const useCartStore = create<CartState>()(
 
       requiresPrescription: () =>
         get().items.some((i) => i.medicine.isPrescriptionRequired),
+
+      setDrawerOpen: (v) => set({ isDrawerOpen: v }),
     }),
-    { name: 'pb-cart' }
+    {
+      name: 'pb-cart',
+      partialize: (s) => ({ items: s.items, pharmacyId: s.pharmacyId }),
+    }
   )
 )

@@ -55,7 +55,25 @@ const pharmacyRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get('/pharmacies/:id', async (request, reply) => {
     const { id } = request.params as { id: string }
 
-    const pharmacy = await fastify.prisma.pharmacy.findUnique({ where: { id } })
+    const pharmacy = await fastify.prisma.pharmacy.findUnique({
+      where: { id },
+      include: {
+        doctors: {
+          where: { isActive: true },
+          select: {
+            id:              true,
+            name:            true,
+            specialty:       true,
+            consultationFee: true,
+            imageUrl:        true,
+            isVerified:      true,
+            experience:      true,
+            qualifications:  true,
+          },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    })
     if (!pharmacy || !pharmacy.isActive) {
       return reply.code(404).send(error(ERROR_CODES.NOT_FOUND, 'Pharmacy not found'))
     }

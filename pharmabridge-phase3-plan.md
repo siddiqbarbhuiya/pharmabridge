@@ -1,18 +1,20 @@
 # PharmaBridge — Phase 3 Extension Plan
+
 ### Doctor Appointments + Promo Cards + PWA Completion
+
 **Picks up from: Section 16, Step 2 (Design System done)**
 
 ---
 
 ## Overview of What's New in This Plan
 
-| Feature | Priority | Complexity |
-|---|---|---|
-| Doctor Appointment Booking | 🔴 HIGH | High |
-| Promo Card System (Commercial Ads) | 🟡 MEDIUM | Medium |
-| PWA Completion (all 3 apps) | 🔴 HIGH | High |
-| Pharmacy Doctor Listing (Panel) | 🔴 HIGH | Medium |
-| Admin Promo Management | 🟡 MEDIUM | Low |
+| Feature                            | Priority  | Complexity |
+| ---------------------------------- | --------- | ---------- |
+| Doctor Appointment Booking         | 🔴 HIGH   | High       |
+| Promo Card System (Commercial Ads) | 🟡 MEDIUM | Medium     |
+| PWA Completion (all 3 apps)        | 🔴 HIGH   | High       |
+| Pharmacy Doctor Listing (Panel)    | 🔴 HIGH   | Medium     |
+| Admin Promo Management             | 🟡 MEDIUM | Low        |
 
 ---
 
@@ -24,6 +26,7 @@ Before continuing in Claude Code, create this new skill file at `.claude/skills/
 # Doctor Appointment System
 
 ## Business Rules
+
 - Appointment booking is FREE for users (no payment)
 - Doctors are listed BY pharmacies (pharmacy owns doctor slots)
 - Pharmacy registers → admin verifies manually → pharmacy goes LIVE
@@ -32,17 +35,20 @@ Before continuing in Claude Code, create this new skill file at `.claude/skills/
 - Pharmacy staff manages all doctor availability and bookings
 
 ## Appointment Status Flow
+
 PENDING → CONFIRMED → COMPLETED
 PENDING → CANCELLED (by user or pharmacy)
 CONFIRMED → NO_SHOW (by pharmacy if user didn't come)
 
 ## Availability Model
+
 - DoctorAvailability: pharmacyId, doctorId, dayOfWeek (0–6), startTime, endTime, slotDurationMinutes
 - TimeSlot: generated on-the-fly from availability, NOT stored in DB
 - Appointment: stores booked slot (date + startTime + endTime)
 - Max slots per day = Math.floor((endTime - startTime) / slotDuration)
 
 ## Doctor Profile Fields
+
 - name, specialization, qualification, experience (years)
 - consultationFee: 0 (FREE, kept in schema for future monetization)
 - photo (Cloudinary)
@@ -51,6 +57,7 @@ CONFIRMED → NO_SHOW (by pharmacy if user didn't come)
 - isActive
 
 ## Booking Rules
+
 - User must be logged in
 - One booking per user per doctor per day
 - Slot must be in the future (no past booking)
@@ -166,6 +173,7 @@ enum PromoTarget {
 ```
 
 Also add relations to existing models:
+
 ```prisma
 // Add to User model:
 appointments  Appointment[]
@@ -231,11 +239,13 @@ Create `.claude/skills/promo-cards.md`:
 # Promo Card System
 
 ## Card Types (matches design from screenshots)
+
 1. TEXT — gradient background + badge + title + subtitle + optional CTA
 2. IMAGE_PANEL — left: text content, right: image panel (split layout)
 3. FULL_IMAGE — full background image with text overlay
 
 ## Carousel Behavior (customer app home page)
+
 - Horizontal scroll carousel with dot pagination
 - Auto-advances every 5 seconds (Framer Motion AnimatePresence)
 - Touch/swipe support on mobile
@@ -243,6 +253,7 @@ Create `.claude/skills/promo-cards.md`:
 - Position: appears ABOVE pharmacy discovery section on home page
 
 ## Background Options (TEXT type)
+
 - Blue gradient: linear-gradient(135deg, #3B82F6, #6366F1)
 - Green gradient: linear-gradient(135deg, #10B981, #059669)
 - Purple gradient: linear-gradient(135deg, #8B5CF6, #6D28D9)
@@ -251,14 +262,17 @@ Create `.claude/skills/promo-cards.md`:
 - Pink gradient: linear-gradient(135deg, #EC4899, #DB2777)
 
 ## Badge Format
+
 Emoji + text label. Examples: "🏥 Health Tips", "💊 Offer", "📊 Market Insights"
 Badge pill: white/10% opacity background, small pill shape.
 
 ## CTA (optional)
+
 If ctaUrl starts with "/" — internal navigation (React Router push)
 If ctaUrl starts with "http" — open in new tab
 
 ## Stock Tags
+
 Tags link to pharmacy search (pharmacySlug) or medicine search (medicineName).
 Displayed as small chips below the card content.
 ```
@@ -279,13 +293,14 @@ Displayed as small chips below the card content.
 #### STEP 3 — Shared Types (including new entities)
 
 Prompt to Claude Code:
+
 ```
 In packages/types, create Zod schemas for ALL entities.
 Read .claude/skills/api-conventions.md.
 
 Create schemas for:
 - User, Address (existing)
-- Pharmacy, Medicine, Order, OrderItem, Prescription (existing)  
+- Pharmacy, Medicine, Order, OrderItem, Prescription (existing)
 - Notification, Commission (existing)
 - Doctor, DoctorAvailability, Appointment (NEW)
 - PromoCard (NEW)
@@ -301,6 +316,7 @@ Types must work in both frontend and backend — no Node.js imports.
 #### STEP 4 — Fastify Server + Full Prisma Schema
 
 Prompt to Claude Code:
+
 ```
 In packages/api, set up the Fastify server with TypeScript.
 Read all files in .claude/skills/ before starting.
@@ -336,6 +352,7 @@ Run: pnpm prisma migrate dev --name init
 #### STEP 5 — Auth Service
 
 Prompt to Claude Code:
+
 ```
 In packages/api, implement the authentication system.
 Read .claude/skills/api-conventions.md and .claude/skills/indian-market.md.
@@ -370,6 +387,7 @@ All inputs validated with Zod. All responses use standard format.
 #### STEP 6 — Pharmacy + Medicine + Prescription APIs
 
 Prompt to Claude Code:
+
 ```
 In packages/api, implement pharmacy, medicine, and prescription routes.
 Read all files in .claude/skills/ before starting.
@@ -379,7 +397,7 @@ Read all files in .claude/skills/ before starting.
    GET  /api/v1/pharmacies/:slug
    POST /api/v1/pharmacies (authenticated, creates PENDING pharmacy)
    PATCH /api/v1/pharmacies/:id/status (admin only)
-   
+
    Nearby logic: use Haversine formula (no PostGIS needed):
    const dist = haversine(userLat, userLng, pharmacy.lat, pharmacy.lng)
    Filter where dist <= radius, sort by dist ASC.
@@ -391,7 +409,7 @@ Read all files in .claude/skills/ before starting.
    PATCH /api/v1/medicines/:id (PHARMACY_OWNER, owns pharmacy)
    PATCH /api/v1/medicines/:id/stock (PHARMACY_OWNER)
    PATCH /api/v1/medicines/:id (soft delete via isActive=false)
-   
+
    Validate: price <= mrp (Indian drug price control law)
 
 3. Prescription routes (src/routes/prescriptions.ts):
@@ -407,6 +425,7 @@ All Zod validation. All standard response format.
 #### STEP 7 — Doctor + Appointment APIs (NEW)
 
 Prompt to Claude Code:
+
 ```
 In packages/api, implement the complete doctor appointment system.
 Read .claude/skills/appointments.md and .claude/skills/api-conventions.md.
@@ -424,10 +443,10 @@ Read .claude/skills/appointments.md and .claude/skills/api-conventions.md.
    GET /api/v1/doctors?pharmacyId=&specialization=
      - Returns doctors with isActive=true for APPROVED pharmacies only
      - Include pharmacy name and address
-   
+
    GET /api/v1/doctors/:id
      - Full doctor profile + pharmacy info + weekly availability summary
-   
+
    GET /api/v1/doctors/:id/slots?date=YYYY-MM-DD
      - Validate date is not in the past
      - Call generateAvailableSlots utility
@@ -443,7 +462,7 @@ Read .claude/skills/appointments.md and .claude/skills/api-conventions.md.
      - Emit Socket.io event to pharmacy namespace
      - Queue notification job for pharmacy
      - Return appointment with full doctor + pharmacy details
-   
+
    GET /api/v1/appointments (user's own, paginated, latest first)
    GET /api/v1/appointments/:id
    POST /api/v1/appointments/:id/cancel
@@ -453,19 +472,19 @@ Read .claude/skills/appointments.md and .claude/skills/api-conventions.md.
 
 4. Pharmacy doctor management (src/routes/pharmacy/doctors.ts):
    All routes require: authenticate + requireRole('PHARMACY_OWNER') + validatePharmacyOwner
-   
+
    GET  /api/v1/pharmacy/doctors
    POST /api/v1/pharmacy/doctors
      - Body: { name, specialization, qualification, experience, bio, languages, photo }
    PATCH /api/v1/pharmacy/doctors/:id
    PATCH /api/v1/pharmacy/doctors/:id/deactivate (soft delete)
-   
+
    GET  /api/v1/pharmacy/doctors/:id/availability
      - Returns 7-day availability schedule (one entry per dayOfWeek)
    PUT  /api/v1/pharmacy/doctors/:id/availability
      - Full replacement of availability schedule
      - Body: Array<{ dayOfWeek, startTime, endTime, slotDurationMinutes, isActive }>
-   
+
    GET  /api/v1/pharmacy/appointments
      - Filter: status, doctorId, date range, page/limit
    PATCH /api/v1/pharmacy/appointments/:id/status
@@ -480,6 +499,7 @@ Use Prisma transactions for booking creation (prevent double-booking via row-lev
 #### STEP 8 — Orders + Payments API
 
 Prompt to Claude Code:
+
 ```
 In packages/api, implement order and payment routes.
 Read .claude/skills/api-conventions.md and .claude/skills/indian-market.md.
@@ -492,7 +512,7 @@ Read .claude/skills/api-conventions.md and .claude/skills/indian-market.md.
      - Create Order + OrderItems + OrderTimeline in transaction
      - Decrement stock atomically
      - Emit socket event to pharmacy
-   
+
    GET /api/v1/orders (customer's own, paginated)
    GET /api/v1/orders/:id (includes timeline + items + prescription status)
    PATCH /api/v1/orders/:id/status (PHARMACY_OWNER, state machine)
@@ -504,19 +524,19 @@ Read .claude/skills/api-conventions.md and .claude/skills/indian-market.md.
    PROCESSING → READY_FOR_PICKUP | OUT_FOR_DELIVERY
    READY_FOR_PICKUP → DELIVERED
    OUT_FOR_DELIVERY → DELIVERED
-   
+
    On every status change: insert OrderTimeline + emit socket + queue notification
 
 3. Payment routes (src/routes/payments.ts):
    POST /api/v1/payments/create-order
      - Create Razorpay order (amount in paise: totalAmount * 100)
      - Return { razorpayOrderId, amount, currency: 'INR', key: RAZORPAY_KEY_ID }
-   
+
    POST /api/v1/payments/verify
      - Verify HMAC signature: razorpay_order_id + "|" + razorpay_payment_id
      - Update order paymentStatus = PAID
      - Return { success: true, orderId }
-   
+
    POST /api/v1/payments/webhook (no auth — verify by Razorpay signature header)
      - Handle: payment.captured, payment.failed, refund.processed
 
@@ -528,6 +548,7 @@ Order number format: PB-2025-00001 (year + 5-digit zero-padded sequence)
 #### STEP 9 — Promo Card API (NEW)
 
 Prompt to Claude Code:
+
 ```
 In packages/api, implement the promo card system.
 Read .claude/skills/promo-cards.md and .claude/skills/api-conventions.md.
@@ -559,7 +580,7 @@ Read .claude/skills/promo-cards.md and .claude/skills/api-conventions.md.
        startAt?: datetime
        endAt?: datetime
        order?: number (integer)
-   
+
    PATCH /api/v1/admin/promo-cards/:id (partial update)
    DELETE /api/v1/admin/promo-cards/:id (soft delete: isActive = false)
    POST /api/v1/admin/promo-cards/reorder
@@ -574,6 +595,7 @@ Seed 3 sample promo cards in prisma/seed.ts for development.
 #### STEP 10 — WebSocket + Notification System
 
 Prompt to Claude Code:
+
 ```
 In packages/api, add Socket.io and the notification system.
 
@@ -603,7 +625,7 @@ Socket events emitted by server:
     "order:status_updated" — { orderId, status, message }
     "appointment:confirmed" — { appointmentId, doctorName, time }
     "appointment:cancelled" — { appointmentId, reason }
-  
+
   To /pharmacy namespace, room pharmacy:{pharmacyId}:
     "order:new" — { orderId, orderNumber, itemCount, totalAmount }
     "appointment:new" — { appointmentId, patientName, doctorName, time }
@@ -619,6 +641,7 @@ Socket events emitted by server:
 #### STEP 11 — Customer App Setup + Routing
 
 Prompt to Claude Code:
+
 ```
 In apps/customer, set up the React PWA with full routing.
 Read .claude/skills/pwa-config.md and .claude/skills/design-system.md.
@@ -630,7 +653,7 @@ Read .claude/skills/pwa-config.md and .claude/skills/design-system.md.
    Existing: /, /search, /pharmacy/:slug, /medicine/:id, /cart
    Existing: /checkout/*, /orders, /orders/:id, /prescriptions, /profile
    Existing: /auth/login, /notifications
-   
+
    NEW routes for this phase:
    /doctors                    — browse all doctors (search + filter)
    /doctors/:id                — doctor profile + book appointment
@@ -654,6 +677,7 @@ Read .claude/skills/pwa-config.md and .claude/skills/design-system.md.
 #### STEP 12 — Home Page with Promo Carousel (NEW)
 
 Prompt to Claude Code:
+
 ```
 In apps/customer/src/pages/Home.tsx, build the landing page.
 Read .claude/skills/design-system.md and .claude/skills/promo-cards.md.
@@ -682,7 +706,7 @@ DETAILED REQUIREMENTS:
    - Auto-advance every 5 seconds (Framer Motion AnimatePresence)
    - Swipe/touch support (use Framer Motion drag or react-swipeable)
    - Card rendering (match the design from screenshots exactly):
-   
+
    TEXT type card:
      - Full-width card with gradient background (from card.background)
      - Top-left: badge pill (emoji + label, white/10% background)
@@ -690,17 +714,17 @@ DETAILED REQUIREMENTS:
      - Subtitle text (white/70%)
      - Bottom: CTA button (white, rounded pill) if ctaLabel exists
      - Stock tags as small chips at bottom-left
-   
+
    IMAGE_PANEL type:
      - Left 65%: text content (badge, title, subtitle, CTA)
      - Right 35%: image panel with cover fit
      - Gradient overlay on left→right for text legibility
-   
+
    FULL_IMAGE type:
      - Full bleed image as background
      - Text overlay with dark gradient (bottom 50%)
      - Badge, title, subtitle, CTA overlaid on image
-   
+
    Skeleton: show 1 skeleton card while loading
 
 3. Doctor Appointment CTA strip:
@@ -717,9 +741,10 @@ DETAILED REQUIREMENTS:
 
 #### STEP 13 — Medicine Search + Pharmacy Detail
 
-*(Same as original plan Step 11 — no changes)*
+_(Same as original plan Step 11 — no changes)_
 
 Prompt to Claude Code:
+
 ```
 Build the search and pharmacy detail pages in apps/customer.
 (Use original plan Step 11 prompt — unchanged)
@@ -733,13 +758,14 @@ Also on /pharmacy/:slug page, add a "Doctors Available" section:
 
 #### STEP 14 — Cart + Checkout Flow
 
-*(Same as original plan Step 12 — no changes)*
+_(Same as original plan Step 12 — no changes)_
 
 ---
 
 #### STEP 15 — Doctor Browsing + Booking (NEW)
 
 Prompt to Claude Code:
+
 ```
 Build the doctor discovery and appointment booking pages in apps/customer.
 Read .claude/skills/appointments.md and .claude/skills/design-system.md.
@@ -764,26 +790,26 @@ Read .claude/skills/appointments.md and .claude/skills/design-system.md.
    - Pharmacy address + distance + map pin
    - "Consultation: FREE" green badge (prominent)
    - Bio section
-   
+
    AVAILABILITY CALENDAR:
    - Horizontal date picker: today + next 6 days (7 days total)
    - Each date shows day name + date number
    - Disabled past dates and days with no availability
    - On date select: fetch GET /api/v1/doctors/:id/slots?date=YYYY-MM-DD
-   
+
    TIME SLOTS GRID:
    - Display available/unavailable slots as pill buttons
    - Available: green outline, tappable
    - Unavailable: grey, disabled, strikethrough
    - Loading skeleton while fetching slots
-   
+
    BOOKING FORM (appears after slot selection):
    - Patient Name (pre-fill from user profile)
    - Phone number (pre-fill from auth)
    - Age (optional)
    - Symptoms / Reason for visit (textarea, optional)
    - "Confirm Appointment" button (green CTA)
-   
+
    On submit:
    - POST /api/v1/appointments
    - Show success screen (Framer Motion animation):
@@ -814,7 +840,7 @@ Read .claude/skills/appointments.md and .claude/skills/design-system.md.
 
 #### STEP 16 — Order Tracking + Profile
 
-*(Same as original plan Step 13 — no changes)*
+_(Same as original plan Step 13 — no changes)_
 
 ---
 
@@ -825,6 +851,7 @@ Read .claude/skills/appointments.md and .claude/skills/design-system.md.
 #### STEP 17 — Pharmacy Panel Setup + Medicine Management
 
 Prompt to Claude Code:
+
 ```
 In apps/pharmacy, set up the Pharmacy Panel PWA.
 Read .claude/skills/design-system.md and .claude/skills/pwa-config.md.
@@ -853,11 +880,12 @@ Read .claude/skills/design-system.md and .claude/skills/pwa-config.md.
 4. Shared layout: Sidebar navigation (desktop) + Bottom nav (mobile)
 ```
 
----
+## ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
 
 #### STEP 18 — Pharmacy Doctor Management (NEW)
 
 Prompt to Claude Code:
+
 ```
 In apps/pharmacy, build the Doctor Management section.
 Read .claude/skills/appointments.md.
@@ -878,7 +906,7 @@ Read .claude/skills/appointments.md.
    - Bio (textarea)
    - Languages spoken (multi-select chips)
    - isActive toggle (default ON)
-   
+
    On submit: POST /api/v1/pharmacy/doctors
    Show success toast, redirect to doctor list
 
@@ -909,7 +937,7 @@ Read .claude/skills/appointments.md.
 
 #### STEP 19 — Pharmacy Order Management + Analytics
 
-*(Same as original plan Step 14–15 — no changes)*
+_(Same as original plan Step 14–15 — no changes)_
 
 ---
 
@@ -920,6 +948,7 @@ Read .claude/skills/appointments.md.
 #### STEP 20 — Admin Panel Setup
 
 Prompt to Claude Code:
+
 ```
 In apps/admin, set up the Admin Panel PWA.
 Read .claude/skills/design-system.md.
@@ -942,6 +971,7 @@ Routes:
 #### STEP 21 — Admin Promo Card Management (NEW)
 
 Prompt to Claude Code:
+
 ```
 In apps/admin, build the Promo Card Management section.
 Read .claude/skills/promo-cards.md.
@@ -957,7 +987,7 @@ Read .claude/skills/promo-cards.md.
    CARD TYPE SELECTOR (matches screenshot design):
    - 3 tabs: [T] Text | [⊞] Image Panel | [⊡] Full Image
    - Selecting changes which fields appear
-   
+
    FORM FIELDS (common to all types):
    - Badge: text input with emoji picker (optional)
    - Title * (required)
@@ -967,21 +997,21 @@ Read .claude/skills/promo-cards.md.
    - Target App: [Customer] [Pharmacy] [All]
    - Schedule: Start Date | End Date (optional date pickers)
    - Display Order: number input
-   
+
    ADDITIONAL for TEXT type:
    - Background Color: 6 gradient swatches + custom hex input
      (matches the screenshot: blue, green, purple, orange, dark, pink circles)
    - Stock Tags: comma-separated input (e.g. "HDFCBANK, ICICIBANK" in screenshot)
      For PharmaBridge: medicine categories or pharmacy slugs
-   
+
    ADDITIONAL for IMAGE_PANEL and FULL_IMAGE:
    - Image URL: text input OR "Choose image file" upload button
    - Upload → Cloudinary direct upload, show preview
-   
+
    LIVE PREVIEW PANEL (right side on desktop, below form on mobile):
    - Renders the actual PromoCard component with current form values
    - Updates in real-time as user types
-   
+
    On save: POST/PATCH /api/v1/admin/promo-cards
    Show toast, redirect to list
 
@@ -997,6 +1027,7 @@ Read .claude/skills/promo-cards.md.
 #### STEP 22 — Admin Pharmacy Approval + Appointment Overview
 
 Prompt to Claude Code:
+
 ```
 In apps/admin, build:
 
@@ -1033,6 +1064,7 @@ In apps/admin, build:
 #### STEP 23 — PWA Service Worker + Offline Experience
 
 Prompt to Claude Code:
+
 ```
 Finalize PWA configuration for ALL THREE apps (customer, pharmacy, admin).
 Read .claude/skills/pwa-config.md carefully.
@@ -1079,6 +1111,7 @@ For each app:
 #### STEP 24 — Performance Optimization
 
 Prompt to Claude Code:
+
 ```
 Optimize all three frontend apps for India network performance.
 Read .claude/skills/indian-market.md and .claude/skills/pwa-config.md.
@@ -1118,6 +1151,7 @@ Read .claude/skills/indian-market.md and .claude/skills/pwa-config.md.
 #### STEP 25 — Error Handling + Edge Cases
 
 Prompt to Claude Code:
+
 ```
 Implement comprehensive error handling across the full stack.
 
@@ -1145,6 +1179,7 @@ Backend:
 #### STEP 26 — Testing + Deployment
 
 Prompt to Claude Code:
+
 ```
 Set up testing and prepare for deployment.
 
@@ -1170,13 +1205,13 @@ Set up testing and prepare for deployment.
      - Set all env vars (DB, Redis, JWT, Cloudinary, Razorpay, MSG91, Firebase)
      - Run: pnpm prisma migrate deploy
      - Run: pnpm prisma db seed (admin user + sample promo cards)
-   
+
    - apps/customer → Vercel (pharmabridge.in or custom domain)
    - apps/pharmacy → Vercel (pharmacy.pharmabridge.in)
    - apps/admin → Vercel (admin.pharmabridge.in, protected)
-   
+
    - Cloudflare: set up DNS for all three domains, enable CDN + DDoS protection
-   
+
    Post-deploy verification:
    - Register as customer → OTP login
    - Register pharmacy → admin approves it
@@ -1244,12 +1279,14 @@ pharmabridge/
 ## New Environment Variables
 
 Add to `packages/api/.env`:
+
 ```bash
 # (no new external services required — appointments use existing DB + notifications)
 # Promo cards are stored in DB — no new service needed
 ```
 
 Add to `apps/customer/.env`:
+
 ```bash
 # No new vars — promo cards fetched from same API
 ```
@@ -1259,6 +1296,7 @@ Add to `apps/customer/.env`:
 ## Updated Launch Checklist
 
 ### Doctor Appointments
+
 - [ ] Pharmacy can add doctor profiles with photos
 - [ ] Pharmacy can set weekly availability schedule
 - [ ] Customer can see available slots for any date
@@ -1270,6 +1308,7 @@ Add to `apps/customer/.env`:
 - [ ] Appointment cancellation window tested (< 2hr rejection works)
 
 ### Promo Cards
+
 - [ ] Admin can create TEXT, IMAGE_PANEL, FULL_IMAGE cards
 - [ ] Admin can set background colors for TEXT cards
 - [ ] Admin can upload images for IMAGE_PANEL and FULL_IMAGE cards
@@ -1281,6 +1320,7 @@ Add to `apps/customer/.env`:
 - [ ] Inactive or expired cards are not shown to customers
 
 ### PWA (all 3 apps)
+
 - [ ] All 3 apps installable on Android Chrome
 - [ ] All 3 apps installable on iOS Safari
 - [ ] Offline page shows when network is lost
@@ -1291,6 +1331,6 @@ Add to `apps/customer/.env`:
 
 ---
 
-*PharmaBridge Phase 3 — Extended Plan*
-*Doctor Appointments + Promo Cards + PWA*
-*Version 2.0 — May 2026*
+_PharmaBridge Phase 3 — Extended Plan_
+_Doctor Appointments + Promo Cards + PWA_
+_Version 2.0 — May 2026_
