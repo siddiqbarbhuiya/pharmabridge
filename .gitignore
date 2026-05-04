@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Turborepo
+.turbo/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Prisma
+packages/api/prisma/dev.db
+packages/api/prisma/dev.db-journal
+packages/api/prisma/migrations/
+
+# Test coverage
+coverage/
+
+# PWA assets (generated)
+apps/*/public/sw.js
+apps/*/public/workbox-*.js

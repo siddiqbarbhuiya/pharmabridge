@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08080E" />
+  <title>You're offline — PharmaBridge</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #0A0A0B;
+      --paper:  #FFFFFF;
+      --bone:   #F7F7F5;
+      --line:   #E6E6E3;
+      --muted:  rgba(10, 10, 11, 0.4);
+      --bg:     #08080E;
+      --card:   rgba(255, 255, 255, 0.06);
+    }
+
+    html, body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: #FFFFFF;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrap {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .eyebrow {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #FFFFFF;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.5rem;
+      border-radius: 8px;
+      background: #FFFFFF;
+      color: #0A0A0B;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0 1.25rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn:active { opacity: 0.8; }
+
+    .wordmark {
+      margin-top: 3rem;
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="icon">💊</div>
+
+    <p class="eyebrow">No connection</p>
+
+    <h1>You're offline</h1>
+
+    <p>
+      PharmaBridge needs an internet connection to show you<br />
+      pharmacies, medicines, and your orders.
+    </p>
+
+    <button class="btn" onclick="window.location.reload()">
+      Try again
+    </button>
+
+    <p class="wordmark">PHARMABRIDGE</p>
+  </div>
+</body>
+</html>

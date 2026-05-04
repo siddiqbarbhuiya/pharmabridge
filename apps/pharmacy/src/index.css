@@ -1,0 +1,36 @@
+@import '../../../packages/ui/src/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    background-color: #f7f7f5;
+    color: #0a0a0b;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100dvh;
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    background: linear-gradient(90deg, #f7f7f5 25%, #e6e6e3 50%, #f7f7f5 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}

@@ -1,0 +1,11 @@
+{
+  "extends": "@pharmabridge/config/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}

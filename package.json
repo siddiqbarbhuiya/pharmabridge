@@ -1,0 +1,33 @@
+{
+  "name": "pharmabridge",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:customer": "turbo run dev --filter=@pharmabridge/customer",
+    "dev:pharmacy": "turbo run dev --filter=@pharmabridge/pharmacy",
+    "dev:admin": "turbo run dev --filter=@pharmabridge/admin",
+    "dev:api": "turbo run dev --filter=@pharmabridge/api",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\" --ignore-path .prettierignore"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.2",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "@types/node": "^22.15.17",
+    "eslint": "^9.27.0",
+    "@eslint/js": "^9.27.0",
+    "typescript-eslint": "^8.32.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.1.4"
+}

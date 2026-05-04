@@ -1,0 +1,53 @@
+{
+  "name": "@pharmabridge/api",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "echo \"No tests yet\"",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^11.0.0",
+    "@fastify/cors": "^11.0.0",
+    "@fastify/helmet": "^13.0.0",
+    "@fastify/jwt": "^9.0.1",
+    "@fastify/multipart": "^10.0.0",
+    "@fastify/rate-limit": "^10.0.0",
+    "@pharmabridge/types": "workspace:*",
+    "@prisma/client": "^5.22.0",
+    "bullmq": "^5.51.1",
+    "cloudinary": "^2.6.1",
+    "dotenv": "^16.5.0",
+    "fastify": "^5.0.0",
+    "fastify-plugin": "^5.1.0",
+    "firebase-admin": "^12.7.0",
+    "ioredis": "^5.6.1",
+    "jsonwebtoken": "^9.0.3",
+    "pino": "^9.7.0",
+    "pino-pretty": "^13.0.0",
+    "razorpay": "^2.9.6",
+    "socket.io": "^4.8.3",
+    "zod": "^3.25.23"
+  },
+  "devDependencies": {
+    "@pharmabridge/config": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^22.15.17",
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

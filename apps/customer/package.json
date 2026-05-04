@@ -1,0 +1,41 @@
+{
+  "name": "@pharmabridge/customer",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "@pharmabridge/types": "workspace:*",
+    "@pharmabridge/ui": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.0",
+    "framer-motion": "^11.15.0",
+    "zustand": "^5.0.3",
+    "@tanstack/react-query": "^5.75.5",
+    "react-hook-form": "^7.55.0",
+    "@hookform/resolvers": "^3.10.0",
+    "zod": "^3.25.23",
+    "axios": "^1.9.0",
+    "lucide-react": "^0.511.0",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.4.1",
+    "vite": "^5.4.19",
+    "vite-plugin-pwa": "^0.21.1",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "typescript": "^5.8.3",
+    "@pharmabridge/config": "workspace:*"
+  }
+}

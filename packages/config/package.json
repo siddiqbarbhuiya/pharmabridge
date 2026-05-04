@@ -1,0 +1,13 @@
+{
+  "name": "@pharmabridge/config",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./tailwind": "./tailwind.config.js",
+    "./tsconfig": "./tsconfig.base.json"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.3"
+  }
+}
