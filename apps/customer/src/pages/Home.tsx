@@ -316,7 +316,160 @@ export default function HomePage() {
         </Navbar>
 
         {/* ── 1. Hero ──────────────────────────────────────────────────────── */}
-        
+        <section
+          className="hero-gradient flex-1 flex items-center justify-center px-6 py-24 lg:py-32 relative overflow-hidden"
+          style={{ minHeight: 'calc(100vh - 112px)' }}
+        >
+          {/* SVG grid */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ backgroundImage: SVG_GRID, opacity: 0.03 }}
+          />
+
+          {/* Gradient orb */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-[-10%] top-[-20%] w-[600px] h-[600px] rounded-full opacity-20 blur-3xl"
+            style={{ background: 'var(--gradient-orb)' }}
+          />
+
+          {/* Watermark */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute bottom-6 left-0 right-0 overflow-hidden select-none"
+          >
+            <p
+              className="font-display font-medium leading-none tracking-[-0.04em] text-ink whitespace-nowrap px-6"
+              style={{ fontSize: 'clamp(72px, 16vw, 160px)', opacity: 0.025 }}
+            >
+              PHARMABRIDGE
+            </p>
+          </div>
+
+          <div className="relative z-10 max-w-5xl mx-auto w-full grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left copy */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-mint border border-rx/20 mb-8">
+                <span className="w-1.5 h-1.5 rounded-full bg-rx animate-pulse" />
+                <Mono muted>Open pharmacies near you</Mono>
+              </div>
+
+              <Heading as="h1" size="hero" balance className="mb-6">
+                Medicine, delivered
+                <br />
+                <span className="text-ink/40">with trust.</span>
+              </Heading>
+
+              <Text size="lg" muted balance className="max-w-md mb-10">
+                India's UPI-first pharmacy network. Order from licensed neighbourhood pharmacies — fast delivery, verified prescriptions.
+              </Text>
+
+              {/* Search + GPS row */}
+              <div className="flex gap-2 max-w-md">
+                <div className="flex-1 flex items-center gap-3 bg-paper border border-line rounded-md px-4 py-3 focus-within:border-brand-indigo transition-colors shadow-soft">
+                  <Search size={16} className="text-ink/30 flex-shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Search medicines, pharmacies…"
+                    className="flex-1 bg-transparent text-ink placeholder-ink/30 outline-none text-sm"
+                    onFocus={() => { window.location.href = '/search' }}
+                    readOnly
+                  />
+                </div>
+
+                <div className="relative shrink-0">
+                  {!lat && (
+                    <motion.div
+                      className="absolute inset-0 rounded-md"
+                      style={{ background: 'rgba(14,124,102,0.4)' }}
+                      animate={{ scale: [1, 1.6], opacity: [0.7, 0] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                    />
+                  )}
+                  <button
+                    onClick={requestLocation}
+                    disabled={locLoading}
+                    className="relative inline-flex items-center gap-2 px-4 py-3 rounded-md border border-line bg-paper text-ink/60 hover:border-rx hover:text-rx transition-all duration-150 text-sm disabled:opacity-40 shadow-soft whitespace-nowrap"
+                  >
+                    <MapPin size={15} />
+                    {locLoading ? 'Locating…' : lat ? 'Located' : 'Near me'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Pincode toggle */}
+              <div className="mt-3 flex items-center gap-2 h-7">
+                {!showPincode ? (
+                  <button
+                    onClick={() => setShowPincode(true)}
+                    className="text-xs text-ink/40 hover:text-ink/70 transition-colors underline underline-offset-2"
+                  >
+                    Enter pincode instead
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value.replace(/\D/g, ''))}
+                      placeholder="6-digit pincode"
+                      className="w-36 h-8 border border-line rounded-md px-3 text-xs bg-paper text-ink placeholder-ink/30 outline-none focus:border-brand-indigo transition-colors"
+                      autoFocus
+                    />
+                    {pincode.length === 6 && (
+                      <Link
+                        to={`/search?pincode=${pincode}`}
+                        className="inline-flex h-8 items-center px-3 rounded-md bg-ink text-paper text-xs font-medium hover:bg-ink/90 transition-colors"
+                      >
+                        Go
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => { setShowPincode(false); setPincode('') }}
+                      className="text-xs text-ink/40 hover:text-ink/70 transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <Mono muted className="mt-4 block">
+                Razorpay UPI · Serving 50+ cities
+              </Mono>
+            </div>
+
+            {/* Right — decorative orb */}
+            <div className="hidden lg:flex items-center justify-center">
+              <div className="relative w-80 h-80">
+                <div
+                  className="absolute inset-0 rounded-full animate-orb-spin"
+                  style={{
+                    background: 'var(--gradient-orb)',
+                    mask: 'radial-gradient(transparent 60%, black 60%)',
+                    WebkitMask: 'radial-gradient(transparent 60%, black 60%)',
+                    opacity: 0.15,
+                  }}
+                />
+                <div className="absolute inset-[20%] rounded-full bg-gradient-to-br from-mist via-paper to-mint shadow-card flex items-center justify-center">
+                  <Heading as="span" size="2xl" muted>Rx</Heading>
+                </div>
+                <span className="absolute top-4 right-0 bg-paper border border-line rounded-pill px-2 py-1 shadow-soft">
+                  <Mono muted>↑ FASTER DELIVERY</Mono>
+                </span>
+                <span className="absolute bottom-10 left-0 bg-paper border border-line rounded-pill px-2 py-1 shadow-soft">
+                  <Mono muted>↓ LOWER PRICES</Mono>
+                </span>
+                <span className="absolute bottom-1 right-4 bg-paper border border-line rounded-pill px-2 py-1 shadow-soft">
+                  <Mono muted>↑ VERIFIED Rx</Mono>
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* ── 2. Promo Carousel ─────────────────────────────────────────────── */}
         <section className="py-8 bg-paper">
