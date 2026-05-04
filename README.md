@@ -74,3 +74,19 @@ pnpm --filter @pharmabridge/api exec prisma migrate reset
 ## Prisma Version
 Pinned to **v5.22.0** — do NOT upgrade to v7.x without a full migration audit.
 The `prisma migrate dev` command will prompt about v7.8.0 — ignore it.
+
+```bash
+ pnpm dev:customer
+ pnpm dev:pharmacy
+ pnpm dev:admin
+
+ cd packages/api/
+ pnpm db:studio
+
+ start docker desktop
+ # Daily: start / stop
+ docker start pharmabridge-redis
+ docker stop pharmabridge-redis
+
+ pnpm dev:api
+ ```

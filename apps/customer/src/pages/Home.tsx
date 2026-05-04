@@ -32,30 +32,30 @@ interface PromoCard {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const GRADIENTS: Record<string, string> = {
-  blue:   'linear-gradient(135deg, #3B82F6, #6366F1)',
-  green:  'linear-gradient(135deg, #10B981, #059669)',
+  blue: 'linear-gradient(135deg, #3B82F6, #6366F1)',
+  green: 'linear-gradient(135deg, #10B981, #059669)',
   purple: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
   orange: 'linear-gradient(135deg, #F97316, #EF4444)',
-  dark:   'linear-gradient(135deg, #1E293B, #0F172A)',
-  pink:   'linear-gradient(135deg, #EC4899, #DB2777)',
+  dark: 'linear-gradient(135deg, #1E293B, #0F172A)',
+  pink: 'linear-gradient(135deg, #EC4899, #DB2777)',
 }
 
 const CATEGORIES = [
-  { label: 'Diabetes',    emoji: '💉', bg: 'bg-blush' },
-  { label: 'Vitamins',    emoji: '💊', bg: 'bg-mint'  },
-  { label: 'Heart Care',  emoji: '❤️',  bg: 'bg-blush' },
+  { label: 'Diabetes', emoji: '💉', bg: 'bg-blush' },
+  { label: 'Vitamins', emoji: '💊', bg: 'bg-mint' },
+  { label: 'Heart Care', emoji: '❤️', bg: 'bg-blush' },
   { label: 'Pain Relief', emoji: '🩹', bg: 'bg-peach' },
-  { label: 'Antibiotics', emoji: '🧬', bg: 'bg-mist'  },
-  { label: 'Skin Care',   emoji: '✨', bg: 'bg-lilac' },
-  { label: 'Baby Care',   emoji: '👶', bg: 'bg-sky'   },
-  { label: 'Eye Care',    emoji: '👁️',  bg: 'bg-mist'  },
+  { label: 'Antibiotics', emoji: '🧬', bg: 'bg-mist' },
+  { label: 'Skin Care', emoji: '✨', bg: 'bg-lilac' },
+  { label: 'Baby Care', emoji: '👶', bg: 'bg-sky' },
+  { label: 'Eye Care', emoji: '👁️', bg: 'bg-mist' },
 ] as const
 
 const FOOTER_LINKS = {
-  Company:  ['About', 'Blog', 'Careers', 'Press'],
+  Company: ['About', 'Blog', 'Careers', 'Press'],
   Platform: ['For Pharmacies', 'API', 'Status'],
-  Legal:    ['Privacy Policy', 'Terms of Service', 'Refund Policy'],
-  Support:  ['Help Centre', 'Contact Us', 'Safety'],
+  Legal: ['Privacy Policy', 'Terms of Service', 'Refund Policy'],
+  Support: ['Help Centre', 'Contact Us', 'Safety'],
 }
 
 const FEATURE_CARDS = [
@@ -260,9 +260,8 @@ function PromoCarousel() {
               key={i}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`rounded-full transition-all duration-200 ${
-                i === index ? 'w-5 h-1.5 bg-ink' : 'w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40'
-              }`}
+              className={`rounded-full transition-all duration-200 ${i === index ? 'w-5 h-1.5 bg-ink' : 'w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40'
+                }`}
             />
           ))}
         </div>

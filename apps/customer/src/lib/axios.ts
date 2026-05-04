@@ -2,9 +2,9 @@ import axios from 'axios'
 import { useAuthStore } from '../stores/authStore'
 
 export const api = axios.create({
-  baseURL:         import.meta.env.VITE_API_URL ?? '/api/v1',
+  baseURL: import.meta.env.VITE_API_URL ?? '/api/v1',
   withCredentials: true,
-  timeout:         15000,
+  timeout: 15000,
 })
 
 // Attach access token to every request
