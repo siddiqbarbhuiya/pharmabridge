@@ -23,7 +23,7 @@ Host:     localhost
 Port:     5432
 Database: pharmabridge
 User:     postgres
-Password: root
+Password: YOUR PASSWORD
 ```
 
 ### Start / stop PostgreSQL on Windows
@@ -62,7 +62,7 @@ pnpm --filter @pharmabridge/api exec prisma migrate reset
 
 ### .env variable
 ```
-DATABASE_URL="postgresql://postgres:root@localhost:5432/pharmabridge"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/pharmabridge"
 ```
 
 ---
